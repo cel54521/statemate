@@ -1,0 +1,42 @@
+
+.#lexer.cpp,0
+
+lexer.cpp,364
+Lexer::Lexer(FILE *in, FILE *out){Lexer4,43
+void Lexer::analyze(void){analyze12,140
+void Lexer::getNextChar(void){getNextChar45,873
+void Lexer::analyzeToken(void){analyzeToken50,967
+bool Lexer::isLexicalGroup(char c, const char *group){isLexicalGroup65,1327
+void Lexer::addToken(char c){addToken80,1542
+void Lexer::clearToken(void){clearToken88,1695
+
+lexer.h,357
+#define _LEXER__LEXER_2,17
+#define TOKEN TOKEN6,58
+#define R_PAR R_PAR7,75
+#define L_PAR L_PAR8,92
+const char ALPHABET[]={ALPHABET10,111
+const char WHITESPACE[]={' ','\t','\n','\r'};WHITESPACE17,367
+class Lexer{Lexer18,414
+  FILE *in;in20,439
+  FILE *out;out21,452
+  char c;c22,466
+  char buf[1024];buf23,477
+  int bufno;bufno24,496
+
+makefile,535
+CC    = g++CC1,0
+LIBS  =LIBS2,13
+INCROOT	= .INCROOT3,22
+INCDIRS = $(shell find $(INCROOT) -type d)INCDIRS4,35
+INCLUDES = $(foreach dir, $(INCDIRS), -I $(dir))INCLUDES5,79
+SRCROOT	= .SRCROOT6,129
+OBJROOT	= ./objOBJROOT7,142
+SRCDIRS := $(shell find $(SRCROOT) -type d)SRCDIRS8,159
+SOURCES = $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.cpp))SOURCES9,204
+PROGRAM = statematePROGRAM10,268
+OBJDIRS  = $(addprefix $(OBJROOT)/, $(SRCDIRS))OBJDIRS11,289
+OBJS  = $(addprefix $(OBJROOT)/, $(SOURCES:.cpp=.o))OBJS12,338
+
+statemate.cpp,26
+int main(void){main4,42

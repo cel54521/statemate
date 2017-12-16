@@ -1,0 +1,27 @@
+STATE_LED_OFF
+{
+  entry{}
+  do{}
+  exit{}
+
+  EVENT_BTN_ON -> STATE_LED_ON;
+}
+
+STATE_LED_ON
+{
+  entry{}
+  do{}
+  exit{}
+
+  EVENT_BTN_OFF -> STATE_LED_OFF;
+  EVENT_BTN_HOLD -> STATE_ON_HOLD;
+}
+
+STATE_ON_HOLD
+{
+  entry{}
+  do{}
+  exit{}
+
+  EVENT_BTN_OFF -> STATE_LED_OFF;
+}
