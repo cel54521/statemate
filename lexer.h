@@ -1,3 +1,8 @@
+/**
+ * @file lexer.h
+ * @brief statemateš‹å‰ğÍŠí
+ * @author cel54521
+ */
 #ifndef _LEXER_
 #define _LEXER_
 
@@ -8,6 +13,13 @@
 #define L_PAR 2
 
 #define KEYWORD_NUM 3
+
+enum keywords {
+  Entry,
+  Do,
+  Exit
+};
+
 
 const char *keywords[KEYWORD_NUM] = {"entry","do","exit"};
 const char ALPHABET[]={
@@ -27,7 +39,7 @@ class Lexer{
   int bufno;
 
   bool isLexicalGroup(char c, const char *group);
-  bool isKeywords(char *buf);
+  int isKeywords(char *buf);
   void addToken(char c);
   void clearToken(void);
   void getNextChar(void);

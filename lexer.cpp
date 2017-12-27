@@ -1,3 +1,9 @@
+/**
+ * @file lexer.cpp
+ * @brief statemateš‹å‰ğÍŠí
+ * @author cel5451
+ */
+
 #include <string.h>
 #include "lexer.h"
 
@@ -18,8 +24,20 @@ void Lexer::analyze(void){
   while(EOF != c){
     if(this->isLexicalGroup(c, ALPHABET)){
       analyzeToken();
-      fprintf(this->out, "TOKEN,%s\n", this->buf);
-
+      switch(this->isKeywords(this->buf)){
+      case Entry:
+        fprintf(this->out, "ENTRY,%s\n", this->buf);
+        break;
+      case Do:
+        fprintf(this->out, "DO,%s\n", this->buf);
+        break;
+      case Exit:
+        fprintf(this->out, "EXIT,%s\n", this->buf);
+        break;
+      default:
+        fprintf(this->out, "TOKEN,%s\n", this->buf);
+        break;
+      }
     }else if(this->isLexicalGroup(c, WHITESPACE)){
       do{
         getNextChar();
@@ -77,8 +95,16 @@ bool Lexer::isLexicalGroup(char c, const char *group){
   return false;
 }
 
-bool Lexer::isKeywords(char *buf){
+int Lexer::isKeywords(char *buf){
+  int i;
 
+  for(i = 0;i < KEYWORD_NUM; i++){
+    if(strcmp(buf, keywords[i]) == 0){
+      return i;
+    }
+  }
+
+  return -1;
 }
 
 void Lexer::addToken(char c){
