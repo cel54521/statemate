@@ -14,10 +14,10 @@ OBJS  = $(addprefix $(OBJROOT)/, $(SOURCES:.cpp=.o))
 all:    $(PROGRAM)
 
 $(PROGRAM):     $(OBJS)
-	$(CC) $(LIBS) -o $(PROGRAM) $(OBJS) -g
+	$(CC) $(LIBS) -o $(PROGRAM) $(OBJS) -g -std=c++11
 
 $(OBJROOT)/%.o:  $(SRCROOT)/%.cpp
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
-	$(CC) $(LIBS) -o $@ -c $< $(INCLUDES) -g
+	$(CC) $(LIBS) -o $@ -c $< $(INCLUDES) -g -std=c++11
 
 clean:; rm -rf $(OBJROOT)/* *~ $(PROGRAM);

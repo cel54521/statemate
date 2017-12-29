@@ -1,28 +1,34 @@
 
-.#lexer.cpp,0
+lexer.cpp,501
+Lexer::Lexer(FILE *in, FILE *out){Lexer10,145
+void Lexer::analyze(void){analyze18,242
+void Lexer::getNextChar(void){getNextChar84,1781
+void Lexer::analyzeToken(void){analyzeToken88,1842
+void Lexer::analyzeEntryDoExitBlock(void){analyzeEntryDoExitBlock102,2161
+bool Lexer::isLexicalGroup(char c, const char *group){isLexicalGroup115,2401
+int Lexer::isKeywords(char *buf){isKeywords130,2616
+void Lexer::addToken(char c){addToken142,2800
+void Lexer::clearToken(void){clearToken150,2959
 
-lexer.cpp,364
-Lexer::Lexer(FILE *in, FILE *out){Lexer4,43
-void Lexer::analyze(void){analyze12,140
-void Lexer::getNextChar(void){getNextChar45,873
-void Lexer::analyzeToken(void){analyzeToken50,967
-bool Lexer::isLexicalGroup(char c, const char *group){isLexicalGroup65,1327
-void Lexer::addToken(char c){addToken80,1542
-void Lexer::clearToken(void){clearToken88,1695
-
-lexer.h,357
-#define _LEXER__LEXER_2,17
-#define TOKEN TOKEN6,58
-#define R_PAR R_PAR7,75
-#define L_PAR L_PAR8,92
-const char ALPHABET[]={ALPHABET10,111
-const char WHITESPACE[]={' ','\t','\n','\r'};WHITESPACE17,367
-class Lexer{Lexer18,414
-  FILE *in;in20,439
-  FILE *out;out21,452
-  char c;c22,466
-  char buf[1024];buf23,477
-  int bufno;bufno24,496
+lexer.h,606
+#define _LEXER__LEXER_7,97
+#define RESERVED_WORD_NUM RESERVED_WORD_NUM9,116
+enum _keyword {_keyword11,147
+  ENTRY,ENTRY12,164
+  DO,DO13,174
+  EXIT,EXIT14,181
+  TOKEN = RESERVED_WORD_NUM + 1,TOKEN15,190
+  R_PAR,R_PAR16,224
+  L_PAR,L_PAR17,234
+const char *RESERVED_WORD[RESERVED_WORD_NUM] = {"entry","do","exit"};RESERVED_WORD21,252
+const char ALPHABET[]={ALPHABET22,323
+const char WHITESPACE[]={' ','\t','\n','\r','\0'};WHITESPACE28,582
+class Lexer{Lexer30,636
+  FILE *in;in32,661
+  FILE *out;out33,674
+  char c;c34,688
+  char buf[1024];buf35,699
+  int bufno;bufno36,718
 
 makefile,535
 CC    = g++CC1,0

@@ -1,13 +1,24 @@
 /**
  * @file lexer.cpp
  * @brief statemateš‹å‰ğÍŠí
- * @author cel5451
+ * @author cel54521
  */
-
+#include <stdio.h>
 #include <string.h>
 #include "lexer.h"
 
-Lexer::Lexer(FILE *in, FILE *out){
+static const char *RESERVED_WORD[RESERVED_WORD_NUM] = {"entry","do","exit"};
+static const char ALPHABET[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+                             'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                             '_','\0'
+};
+
+static const char WHITESPACE[] = {
+  ' ','\t','\n','\r','\0'
+};
+
+Lexer::Lexer(FILE *in, FILE *out)
+{
   this->in = in;
   this->out = out;
 
@@ -15,7 +26,8 @@ Lexer::Lexer(FILE *in, FILE *out){
 }
 
 
-void Lexer::analyze(void){
+void Lexer::analyze(void)
+{
   int bufno = 0;
   char buf[1024];
 
@@ -23,41 +35,54 @@ void Lexer::analyze(void){
 
   while(EOF != c){
     if(this->isLexicalGroup(c, ALPHABET)){
-      analyzeToken();
+      this->analyzeToken();
+
       switch(this->isKeywords(this->buf)){
-      case Entry:
+      case ENTRY:
         fprintf(this->out, "ENTRY,%s\n", this->buf);
+
         break;
-      case Do:
+      case DO:
         fprintf(this->out, "DO,%s\n", this->buf);
+
         break;
-      case Exit:
+      case EXIT:
         fprintf(this->out, "EXIT,%s\n", this->buf);
+
         break;
       default:
         fprintf(this->out, "TOKEN,%s\n", this->buf);
+
         break;
       }
+    }else if(c == '['){
+      this->analyzeEntryDoExitBlock();
+      fprintf(this->out, "ENTRY_DO_EXIT_BLOCK,%s\n", this->buf);
+      this->getNextChar();
+    }else if(c == '('){
+      this->analyzeExpression();
+      fprintf(this->out, "EXPRESSION,%s\n", this->buf);
+      this->getNextChar();
     }else if(this->isLexicalGroup(c, WHITESPACE)){
       do{
-        getNextChar();
+        this->getNextChar();
       }while(this->isLexicalGroup(c, WHITESPACE));
     }else if(c == '{'){
       fprintf(this->out, "LPAR,{\n");
-      getNextChar();
+      this->getNextChar();
     }else if(c == '}'){
       fprintf(this->out, "RPAR,}\n");
-      getNextChar();
+      this->getNextChar();
     }else if(c == '-'){
       this->clearToken();
       this->addToken(c);
-      getNextChar();
+      this->getNextChar();
       if(c == '>'){
         fprintf(this->out, "ALLOW,->\n");
-        getNextChar();
+        this->getNextChar();
       }
     }else{
-      getNextChar();
+      this->getNextChar();
     }
   }
 }
@@ -71,12 +96,56 @@ void Lexer::analyzeToken(void){
 
   while( (this->c != EOF) && this->isLexicalGroup(this->c, ALPHABET)){
     this->addToken(this->c);
-    getNextChar();
+    this->getNextChar();
 
     while(this->isLexicalGroup(this->c, WHITESPACE)){
-      fprintf(stderr,"%c",c);
-      getNextChar();
+      this->getNextChar();
     }
+  }
+}
+
+void Lexer::analyzeEntryDoExitBlock(void){
+  int parCount = 1;
+
+  this->clearToken();
+
+  //]‚Ü‚ÅEntryDoExitBlock‚Æ‚µ‚Ä“o˜^
+  do{
+    this->addToken(this->c);
+    this->getNextChar();
+
+    if(this->c == '['){
+      parCount++;
+    }else if(this->c == ']'){
+      parCount--;
+    }
+  }while((this->c != EOF) && ((parCount != 0) || (this->c != ']')));
+
+  if(this->c == ']'){
+    this->addToken(this->c);
+  }
+}
+
+
+void Lexer::analyzeExpression(void){
+  int parCount = 1;
+
+  this->clearToken();
+
+  //)‚Ü‚ÅEntryDoExitBlock‚Æ‚µ‚Ä“o˜^
+  do{
+    this->addToken(this->c);
+    this->getNextChar();
+
+    if(this->c == '('){
+      parCount++;
+    }else if(this->c == ')'){
+      parCount--;
+    }
+  }while((this->c != EOF) && ((parCount != 0) || (this->c != ')')));
+
+  if(this->c == ')'){
+    this->addToken(this->c);
   }
 }
 
@@ -98,8 +167,8 @@ bool Lexer::isLexicalGroup(char c, const char *group){
 int Lexer::isKeywords(char *buf){
   int i;
 
-  for(i = 0;i < KEYWORD_NUM; i++){
-    if(strcmp(buf, keywords[i]) == 0){
+  for(i = 0;i < RESERVED_WORD_NUM; i++){
+    if(strcmp(buf, RESERVED_WORD[i]) == 0){
       return i;
     }
   }
