@@ -15,6 +15,8 @@ typedef enum _keyword {
   TOKEN = RESERVED_WORD_NUM + 1,
   R_PAR,
   L_PAR,
+  R_BRACKET,
+  L_BRACKET,
   ENTRY_DO_EXIT_BLOCK,
   EXPRESSION
 } keyword;

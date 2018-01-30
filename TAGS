@@ -1,34 +1,40 @@
 
-lexer.cpp,501
-Lexer::Lexer(FILE *in, FILE *out){Lexer10,145
-void Lexer::analyze(void){analyze18,242
-void Lexer::getNextChar(void){getNextChar84,1781
-void Lexer::analyzeToken(void){analyzeToken88,1842
-void Lexer::analyzeEntryDoExitBlock(void){analyzeEntryDoExitBlock102,2161
-bool Lexer::isLexicalGroup(char c, const char *group){isLexicalGroup115,2401
-int Lexer::isKeywords(char *buf){isKeywords130,2616
-void Lexer::addToken(char c){addToken142,2800
-void Lexer::clearToken(void){clearToken150,2959
+lexer.cpp,867
+static const char *RESERVED_WORD[RESERVED_WORD_NUM] = {"entry","do","exit"};RESERVED_WORD10,145
+static const char ALPHABET[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',ALPHABET11,223
+static const char WHITESPACE[] = {WHITESPACE16,541
+Lexer::Lexer(FILE *in, FILE *out)Lexer20,610
+void Lexer::analyze(void)analyze29,709
+void Lexer::getNextChar(void){getNextChar90,2197
+void Lexer::analyzeToken(void){analyzeToken94,2258
+void Lexer::analyzeEntryDoExitBlock(void){analyzeEntryDoExitBlock107,2546
+void Lexer::analyzeExpression(void){analyzeExpression130,2978
+bool Lexer::isLexicalGroup(char c, const char *group){isLexicalGroup152,3402
+int Lexer::isKeywords(char *buf){isKeywords167,3617
+void Lexer::addToken(char c){addToken179,3801
+void Lexer::clearToken(void){clearToken187,3960
 
-lexer.h,606
+lexer.h,582
 #define _LEXER__LEXER_7,97
 #define RESERVED_WORD_NUM RESERVED_WORD_NUM9,116
-enum _keyword {_keyword11,147
-  ENTRY,ENTRY12,164
-  DO,DO13,174
-  EXIT,EXIT14,181
-  TOKEN = RESERVED_WORD_NUM + 1,TOKEN15,190
-  R_PAR,R_PAR16,224
-  L_PAR,L_PAR17,234
-const char *RESERVED_WORD[RESERVED_WORD_NUM] = {"entry","do","exit"};RESERVED_WORD21,252
-const char ALPHABET[]={ALPHABET22,323
-const char WHITESPACE[]={' ','\t','\n','\r','\0'};WHITESPACE28,582
-class Lexer{Lexer30,636
-  FILE *in;in32,661
-  FILE *out;out33,674
-  char c;c34,688
-  char buf[1024];buf35,699
-  int bufno;bufno36,718
+typedef enum _keyword {_keyword11,147
+  ENTRY,ENTRY12,172
+  DO,DO13,182
+  EXIT,EXIT14,189
+  TOKEN = RESERVED_WORD_NUM + 1,TOKEN15,198
+  R_PAR,R_PAR16,232
+  L_PAR,L_PAR17,242
+  R_BRACKET,R_BRACKET18,252
+  L_BRACKET,L_BRACKET19,266
+  ENTRY_DO_EXIT_BLOCK,ENTRY_DO_EXIT_BLOCK20,280
+  EXPRESSIONEXPRESSION21,304
+} keyword;keyword22,318
+class Lexer{Lexer24,332
+  FILE *in;in26,357
+  FILE *out;out27,370
+  char c;c28,384
+  char buf[10240];buf29,395
+  int bufno;bufno30,415
 
 makefile,535
 CC    = g++CC1,0
@@ -43,6 +49,12 @@ SOURCES = $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.cpp))SOURCES9,204
 PROGRAM = statematePROGRAM10,268
 OBJDIRS  = $(addprefix $(OBJROOT)/, $(SRCDIRS))OBJDIRS11,289
 OBJS  = $(addprefix $(OBJROOT)/, $(SOURCES:.cpp=.o))OBJS12,338
+
+parser.c,0
+
+parser.h,64
+#define _PARSER_H__PARSER_H_8,103
+class Parser{Parser10,125
 
 statemate.cpp,26
 int main(void){main4,42
