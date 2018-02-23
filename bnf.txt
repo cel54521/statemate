@@ -1,0 +1,14 @@
+<event> ::= <token> <expression>
+<trigger> ::= <token> <allow> <token>
+
+<trigger-list> ::= <trigger> | <trigger-list>
+
+<state> ::=
+<token>
+<lpar>
+  <entry> <entry_do_exit_block>
+  <do> <entry_do_exit_block>
+  <exit> <entry_do_exit_block>
+
+  <trigger-list>
+<rpar>

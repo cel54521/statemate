@@ -8,7 +8,7 @@
 
 #define RESERVED_WORD_NUM 3
 
-typedef enum _keyword {
+enum _keyword {
   ENTRY,
   DO,
   EXIT,
@@ -19,7 +19,7 @@ typedef enum _keyword {
   L_BRACKET,
   ENTRY_DO_EXIT_BLOCK,
   EXPRESSION
-} keyword;
+};
 
 class Lexer{
  private:
