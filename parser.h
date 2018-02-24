@@ -6,18 +6,16 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
 
-enum _type {
-  ENTRY,
-  DO,
-  EXIT,
-  TOKEN = RESERVED_WORD_NUM + 1,
-  R_PAR,
-  L_PAR,
-  R_BRACKET,
-  L_BRACKET,
-  ENTRY_DO_EXIT_BLOCK,
-  EXPRESSION
-};
+#include <stdio.h>
+#include <string.h>
+#include <vector>
+#include "Event.h"
+#include "State.h"
+
+typedef struct _Phrase{
+  int type;
+  char buf[10240];
+}Phrase;
 
 
 class Parser{
@@ -25,12 +23,14 @@ class Parser{
   FILE *in;
   FILE *out;
 
-  int type;
+  Phrase phrase;
+  int lineNo;
 
-  void getPhrase(void);
+  bool getPhrase(void);
+
  public:
   Parser(FILE *in, FILE *out);
-}
+  void analyze(Event* const event, State* const state);
+};
 
 #endif
-(+ 1 2)

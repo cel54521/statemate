@@ -3,9 +3,9 @@
  * @brief statemateš‹å‰ğÍŠí
  * @author cel54521
  */
-#include <stdio.h>
-#include <string.h>
 #include "lexer.h"
+#include <string.h>
+#include "keyword.h"
 
 static const char *RESERVED_WORD[RESERVED_WORD_NUM] = {"entry","do","exit"};
 static const char ALPHABET[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
@@ -68,10 +68,10 @@ void Lexer::analyze(void)
         this->getNextChar();
       }while(this->isLexicalGroup(c, WHITESPACE));
     }else if(c == '{'){
-      fprintf(this->out, "LPAR,{\n");
+      fprintf(this->out, "L_PAR,{\n");
       this->getNextChar();
     }else if(c == '}'){
-      fprintf(this->out, "RPAR,}\n");
+      fprintf(this->out, "R_PAR,}\n");
       this->getNextChar();
     }else if(c == '-'){
       this->clearToken();
