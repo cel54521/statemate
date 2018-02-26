@@ -4,6 +4,7 @@
  * @author cel54521
  */
 #include "state.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -12,38 +13,47 @@ StateList::StateList(void){
 }
 
 StateList::~StateList(void){
-  for(itr = stateList.begin(); itr < stateList.end(); itr++){
-    free(&(*itr));
+  std::vector<Trigger*>::iterator itrTrigger;
+  std::vector<State>::iterator itrStateList;
+
+  for(itrStateList = this->stateList.begin(); itrStateList < this->stateList.end(); itrStateList++){
+
+    for(itrTrigger = itrStateList->trigger_list.begin(); itrTrigger < itrStateList->trigger_list.end(); itrTrigger++){
+      free(*itrTrigger);
+    }
+
+    free(&(*itrStateList));
   }
+
 }
 
 void StateList::push(State state){
-  std::vector<Trigger>::iterator itr;
+  std::vector<Trigger*>::iterator itr;
 
   State *tmp = (State*)malloc(sizeof(State));
 
-  strcpy(state.stateName, tmp->stateName);
-  strcpy(state.entryBlock, tmp->entryBlock);
-  strcpy(state.doBlock, tmp->doBlock);
-  strcpy(state.exitBlock, tmp->exitBlock);
+  strcpy(tmp->stateName, state.stateName);
+  strcpy(tmp->entryBlock, state.entryBlock);
+  strcpy(tmp->doBlock, state.doBlock);
+  strcpy(tmp->exitBlock, state.exitBlock);
 
   for(itr = state.trigger_list.begin(); itr < state.trigger_list.end(); itr++){
     Trigger *tmpTrigger;
     tmpTrigger = (Trigger*)malloc(sizeof(Trigger));
 
-    tmpTrigger = *itr;
+    strcpy(tmpTrigger->triggerName, (*itr)->triggerName);
+    strcpy(tmpTrigger->nextState, (*itr)->nextState);
+
     tmp->trigger_list.push_back(tmpTrigger);
   }
 
   this->stateList.push_back(*tmp);
 }
 
-#ifdef __DEBUG__
 void StateList::print(void){
   std::vector<State>::iterator itr;
 
   for(itr = stateList.begin(); itr < stateList.end(); itr++){
-    fprintf(stderr, "%s,%s\n", itr->stateName, itr->condition);
+    fprintf(stderr, "%s,%s\n", itr->stateName, itr->entryBlock, itr->doBlock, itr->exitBlock);
   }
 }
-#endif

@@ -15,15 +15,13 @@ typedef struct _Event{
 
 class EventList{
  private:
-  std::vector<Event> eventList;
+  std::vector<Event*> eventList;
  public:
   EventList(void);
   ~EventList(void);
   void push(Event event);
 
-#ifdef __DEBUG__
-  print(void);
-#endif
+  void print(void);
 
 };
 

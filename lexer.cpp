@@ -98,9 +98,9 @@ void Lexer::analyzeToken(void){
     this->addToken(this->c);
     this->getNextChar();
 
-    while(this->isLexicalGroup(this->c, WHITESPACE)){
-      this->getNextChar();
-    }
+    //while(this->isLexicalGroup(this->c, WHITESPACE)){
+    //  this->getNextChar();
+    //}
   }
 }
 

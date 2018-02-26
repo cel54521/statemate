@@ -5,6 +5,7 @@
  */
 #include "parser.h"
 #include "keyword.h"
+#include <stdlib.h>
 
 Parser::Parser(FILE *in, FILE *out){
   this->lineNo = 0;
@@ -18,7 +19,9 @@ bool Parser::getPhrase(void){
 
   if(fgets(buf,10240,in) != NULL){
     this->lineNo++;
-    sscanf(buf,"%[^,],%[^,]",type,phrase.buf);
+    sscanf(buf,"%[^,],%s\n",type,phrase.buf);
+
+    fprintf(stderr,"%s,%d\n",phrase.buf,phrase.type);
 
     if(strcmp(type,"ENTRY") == 0){
       phrase.type = ENTRY;
@@ -53,22 +56,22 @@ bool Parser::getPhrase(void){
   return true;
 }
 
-void Parser::analyze(Event* const event, State* const state){
+void Parser::analyze(EventList* const event, StateList* const state){
   char buf[10240];
   Event eventTmp;
   State stateTmp;
   Trigger *triggerTmp;
-  std::vector<Trigger>::iterator itr;
+  std::vector<Trigger*>::iterator itr;
 
   while(getPhrase() == true){
     if(this->phrase.type == TOKEN){
-      strcpy(buf,this->phrase.buf);
+      strcpy(buf, this->phrase.buf);
 
       getPhrase();
       if(this->phrase.type == EXPRESSION){
         // <event>
-        strcpy(buf, eventTmp.eventName);
-        strcpy(this->phrase.buf, eventTmp.condition);
+        strcpy(eventTmp.eventName, buf);
+        strcpy(eventTmp.condition, this->phrase.buf);
 
         event->push(eventTmp);
       }else if(this->phrase.type == L_PAR){
@@ -79,8 +82,8 @@ void Parser::analyze(Event* const event, State* const state){
         if(this->phrase.type == ENTRY){
           getPhrase();
           if(this->phrase.type == ENTRY_DO_EXIT_BLOCK){
-            strcpy(buf, stateTmp.stateName);
-            strcpy(this->phrase.buf, stateTmp.entryBlock);
+            strcpy(stateTmp.stateName, buf);
+            strcpy(stateTmp.entryBlock, this->phrase.buf);
           }else{
             fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
             return;
@@ -95,8 +98,8 @@ void Parser::analyze(Event* const event, State* const state){
         if(this->phrase.type == DO){
           getPhrase();
           if(this->phrase.type == ENTRY_DO_EXIT_BLOCK){
-            strcpy(buf, stateTmp.stateName);
-            strcpy(this->phrase.buf, stateTmp.doBlock);
+            strcpy(stateTmp.stateName, buf);
+            strcpy(stateTmp.doBlock, this->phrase.buf);
           }else{
             fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
             return;
@@ -111,8 +114,8 @@ void Parser::analyze(Event* const event, State* const state){
         if(this->phrase.type == EXIT){
           getPhrase();
           if(this->phrase.type == ENTRY_DO_EXIT_BLOCK){
-            strcpy(buf, stateTmp.stateName);
-            strcpy(this->phrase.buf, stateTmp.exitBlock);
+            strcpy(stateTmp.stateName, buf);
+            strcpy(stateTmp.exitBlock, this->phrase.buf);
           }else{
             fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
             return;
@@ -124,17 +127,16 @@ void Parser::analyze(Event* const event, State* const state){
 
         // trigger-list
         while(getPhrase() == true){
-          triggerTmp = (Trigger*)malloc(sizeof(Trigger));
-
           if(this->phrase.type == TOKEN){
             getPhrase();
             if(this->phrase.type == ALLOW){
               getPhrase();
               if(this->phrase.type == TOKEN){
-                strcpy(buf, triggerTmp->triggerName);
-                strcpy(this->phrase.buf, triggerTmp->nextState);
+                triggerTmp = (Trigger*)malloc(sizeof(Trigger));
+                strcpy(triggerTmp->triggerName, buf);
+                strcpy(triggerTmp->nextState, this->phrase.buf);
 
-                stateTmp.trigger_list.push_back(*triggerTmp);
+                stateTmp.trigger_list.push_back(triggerTmp);
               }else{
                 fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
                 return;
@@ -144,17 +146,16 @@ void Parser::analyze(Event* const event, State* const state){
               return;
             }
           }else{
+            // state-end
+            if(this->phrase.type == R_PAR){
+
+            }else{
+              fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
+              return;
+            }
+
             break;
           }
-        }
-
-        // state-end
-        getPhrase();
-        if(this->phrase.type == R_PAR){
-
-        }else{
-          fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
-          return;
         }
 
         state->push(stateTmp);

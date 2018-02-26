@@ -18,7 +18,7 @@ typedef struct _State{
   char entryBlock[10240];
   char doBlock[10240];
   char exitBlock[10240];
-  std::vector<Trigger> trigger_list;
+  std::vector<Trigger*> trigger_list;
 
 } State;
 
@@ -30,9 +30,7 @@ class StateList{
   ~StateList(void);
   void push(State state);
 
-#ifdef __DEBUG__
-  print(void);
-#endif
+  void print(void);
 };
 
 #endif

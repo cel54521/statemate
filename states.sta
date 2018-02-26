@@ -7,7 +7,7 @@ STATE_LED_OFF
   do[]
   exit[]
 
-  EVENT_BTN_ON -> STATE_LED_ON;
+  EVENT_BTN_ON -> STATE_LED_ON
 }
 
 STATE_LED_ON

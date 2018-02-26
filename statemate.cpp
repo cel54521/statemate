@@ -1,20 +1,27 @@
 #include <stdio.h>
 #include <vector>
+
+#define __DEBUG__
+
+
 #include "lexer.h"
 #include "parser.h"
 #include "event.h"
 #include "state.h"
 
-#define __DEBUG__
 
 int main(void){
   FILE *in;
-  FILE *tmp;
+  FILE *tmp1;
+  FILE *tmp2;
   FILE *out;
   Lexer *lexer;
   Parser *parser;
-  Event event;
-  State state;
+  EventList *event;
+  StateList *state;
+
+  event = new EventList();
+  state = new StateList();
 
 #ifdef __DEBUG__
   std::vector<Event>::iterator eventItr;
@@ -25,7 +32,18 @@ int main(void){
     fprintf(stderr,"sta file not found\n");
   }
 
-  if((tmp = fopen("states.tmp","w+")) == NULL){
+  if((tmp1 = fopen("states.tmp","w")) == NULL){
+    fprintf(stderr,"tmp create or read error\n");
+  }
+
+  // Žš‹å‰ðÍ
+  lexer = new Lexer(in, tmp1);
+  lexer->analyze();
+
+  fclose(in);
+  fclose(tmp1);
+
+  if((tmp2 = fopen("states.tmp","r")) == NULL){
     fprintf(stderr,"tmp create or read error\n");
   }
 
@@ -33,24 +51,18 @@ int main(void){
     fprintf(stderr,"out create error\n");
   }
 
-  // Žš‹å‰ðÍ
-  lexer = new Lexer(in, tmp);
-  lexer->analyze();
-
   // \•¶‰ðÍ
-  parser = new Parser(tmp, out);
-  parser->analyze(&event, &state);
+  parser = new Parser(tmp2, out);
+  parser->analyze(event, state);
+
+  fclose(out);
+  fclose(tmp2);
 
 #ifdef __DEBUG__
   fprintf(stderr,"DEBUG OUTPUT\n");
 
-  for(eventItr = event.begin(); eventItr < event.end(); eventItr++){
-
-  }
-
-  for(stateItr = state.begin(); stateItr < state.end(); stateItr++){
-    fprintf(stderr, "%s,entry=%s,do=%s,exit=%s\n", stateItr->stateName, stateItr->entryBlock, stateItr->doBlock, stateItr->exitBlock);
-  }
+  event->print();
+  state->print();
 #endif
 
   if(lexer != NULL){

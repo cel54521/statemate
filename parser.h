@@ -30,7 +30,7 @@ class Parser{
 
  public:
   Parser(FILE *in, FILE *out);
-  void analyze(Event* const event, State* const state);
+  void analyze(EventList* const event, StateList* const state);
 };
 
 #endif
