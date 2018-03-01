@@ -1,40 +1,59 @@
 
-lexer.cpp,867
-static const char *RESERVED_WORD[RESERVED_WORD_NUM] = {"entry","do","exit"};RESERVED_WORD10,145
-static const char ALPHABET[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',ALPHABET11,223
-static const char WHITESPACE[] = {WHITESPACE16,541
-Lexer::Lexer(FILE *in, FILE *out)Lexer20,610
-void Lexer::analyze(void)analyze29,709
-void Lexer::getNextChar(void){getNextChar90,2197
-void Lexer::analyzeToken(void){analyzeToken94,2258
-void Lexer::analyzeEntryDoExitBlock(void){analyzeEntryDoExitBlock107,2546
-void Lexer::analyzeExpression(void){analyzeExpression130,2978
-bool Lexer::isLexicalGroup(char c, const char *group){isLexicalGroup152,3402
-int Lexer::isKeywords(char *buf){isKeywords167,3617
-void Lexer::addToken(char c){addToken179,3801
-void Lexer::clearToken(void){clearToken187,3960
+event.cpp,181
+EventList::EventList(void){EventList11,152
+EventList::~EventList(void){~EventList15,188
+void EventList::push(Event event){push23,348
+void EventList::print(void){print31,561
 
-lexer.h,582
+event.h,256
+#define _EVENT__EVENT_7,83
+typedef struct _Event{_Event11,123
+  char eventName[10240];eventName12,147
+  char condition[10240];condition13,173
+} Event;Event14,199
+class EventList{EventList16,211
+  std::vector<Event*> eventList;eventList18,240
+
+keyword.h,450
+#define _KEYWORD_H__KEYWORD_H_2,21
+#define RESERVED_WORD_NUM RESERVED_WORD_NUM4,44
+enum _keyword {_keyword6,75
+  ENTRY,ENTRY7,92
+  DO,DO8,102
+  EXIT,EXIT9,109
+  TOKEN = RESERVED_WORD_NUM + 1,TOKEN10,118
+  R_PAR,R_PAR11,152
+  L_PAR,L_PAR12,162
+  ALLOW,ALLOW13,172
+  R_BRACKET,R_BRACKET14,182
+  L_BRACKET,L_BRACKET15,196
+  ENTRY_DO_EXIT_BLOCK,ENTRY_DO_EXIT_BLOCK16,210
+  EXPRESSION,EXPRESSION17,234
+  UNKNOWNUNKNOWN18,249
+
+lexer.cpp,867
+static const char *RESERVED_WORD[RESERVED_WORD_NUM] = {"entry","do","exit"};RESERVED_WORD10,147
+static const char ALPHABET[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',ALPHABET11,225
+static const char WHITESPACE[] = {WHITESPACE16,543
+Lexer::Lexer(FILE *in, FILE *out)Lexer20,612
+void Lexer::analyze(void)analyze29,711
+void Lexer::getNextChar(void){getNextChar90,2201
+void Lexer::analyzeToken(void){analyzeToken94,2262
+void Lexer::analyzeEntryDoExitBlock(void){analyzeEntryDoExitBlock107,2556
+void Lexer::analyzeExpression(void){analyzeExpression130,2988
+bool Lexer::isLexicalGroup(char c, const char *group){isLexicalGroup152,3412
+int Lexer::isKeywords(char *buf){isKeywords167,3627
+void Lexer::addToken(char c){addToken179,3811
+void Lexer::clearToken(void){clearToken187,3970
+
+lexer.h,176
 #define _LEXER__LEXER_7,97
-#define RESERVED_WORD_NUM RESERVED_WORD_NUM9,116
-typedef enum _keyword {_keyword11,147
-  ENTRY,ENTRY12,172
-  DO,DO13,182
-  EXIT,EXIT14,189
-  TOKEN = RESERVED_WORD_NUM + 1,TOKEN15,198
-  R_PAR,R_PAR16,232
-  L_PAR,L_PAR17,242
-  R_BRACKET,R_BRACKET18,252
-  L_BRACKET,L_BRACKET19,266
-  ENTRY_DO_EXIT_BLOCK,ENTRY_DO_EXIT_BLOCK20,280
-  EXPRESSIONEXPRESSION21,304
-} keyword;keyword22,318
-class Lexer{Lexer24,332
-  FILE *in;in26,357
-  FILE *out;out27,370
-  char c;c28,384
-  char buf[10240];buf29,395
-  int bufno;bufno30,415
+class Lexer{Lexer11,138
+  FILE *in;in13,163
+  FILE *out;out14,176
+  char c;c15,190
+  char buf[10240];buf16,201
+  int bufno;bufno17,221
 
 makefile,535
 CC    = g++CC1,0
@@ -50,11 +69,45 @@ PROGRAM = statematePROGRAM10,268
 OBJDIRS  = $(addprefix $(OBJROOT)/, $(SRCDIRS))OBJDIRS11,289
 OBJS  = $(addprefix $(OBJROOT)/, $(SOURCES:.cpp=.o))OBJS12,338
 
-parser.c,0
+parser.cpp,184
+Parser::Parser(FILE *in, FILE *out){Parser10,147
+bool Parser::getPhrase(void){getPhrase16,249
+void Parser::analyze(EventList* const event, StateList* const state){analyze59,1421
 
-parser.h,64
-#define _PARSER_H__PARSER_H_8,103
-class Parser{Parser10,125
+parser.h,285
+#define _PARSER_H__PARSER_H_7,101
+typedef struct _Phrase{_Phrase15,225
+  int type;type16,250
+  char buf[10240];buf17,263
+}Phrase;Phrase18,283
+class Parser{Parser21,297
+  FILE *in;in23,323
+  FILE *out;out24,336
+  Phrase phrase;phrase26,352
+  int lineNo;lineNo27,370
 
-statemate.cpp,26
-int main(void){main4,42
+state.cpp,182
+StateList::StateList(void){StateList11,152
+StateList::~StateList(void){~StateList15,188
+void StateList::push(State state){push30,613
+void StateList::print(void){print53,1288
+
+state.h,550
+#define _STATE__STATE_7,83
+typedef struct _Trigger{_Trigger11,123
+  char triggerName[10240];triggerName12,149
+  char nextState[10240];nextState13,177
+} Trigger;Trigger14,203
+typedef struct _State{_State16,217
+  char stateName[10240];stateName17,241
+  char entryBlock[10240];entryBlock18,267
+  char doBlock[10240];doBlock19,294
+  char exitBlock[10240];exitBlock20,318
+  std::vector<Trigger*> trigger_list;trigger_list21,344
+} State;State23,385
+class StateList{StateList25,397
+  std::vector<State> stateList;stateList27,426
+
+statemate.cpp,61
+#define __DEBUG____DEBUG__4,41
+int main(void){main13,149

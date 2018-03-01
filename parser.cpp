@@ -161,7 +161,7 @@ void Parser::analyze(EventList* const event, StateList* const state){
         state->push(stateTmp);
 
         // triggerTmpŠJ•ú
-        for(itr = stateTmp.trigger_list.begin(); itr < stateTmp.trigger_list.end(); itr++){
+        for(itr = stateTmp.trigger_list.end()-1; itr >= stateTmp.trigger_list.begin(); itr--){
           free(*itr);
         }
       }else{
