@@ -33,6 +33,7 @@ Event* EventList::newEvent(){
 void EventList::print(void){
   std::vector<Event*>::iterator itr;
 
+  fprintf(stderr,"Event\n");
   for(itr = eventList.begin(); itr < eventList.end(); itr++){
     fprintf(stderr, "%s,%s\n", (*itr)->eventName, (*itr)->condition);
   }

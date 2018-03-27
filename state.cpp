@@ -13,17 +13,7 @@ StateList::StateList(void){
 }
 
 StateList::~StateList(void){
-  std::vector<Trigger*>::iterator itrTrigger;
-  std::vector<State>::iterator itrStateList;
 
-  for(itrStateList = this->stateList.begin(); itrStateList < this->stateList.end(); itrStateList++){
-
-    for(itrTrigger = itrStateList->trigger_list.begin(); itrTrigger < itrStateList->trigger_list.end(); itrTrigger++){
-      free(*itrTrigger);
-    }
-
-    free(&(*itrStateList));
-  }
 }
 
 
@@ -36,14 +26,14 @@ State* StateList::newState(void){
   strcpy(tmp->doBlock, "");
   strcpy(tmp->exitBlock, "");
 
-  this->stateList.push_back(*tmp);
+  this->stateList.push_back(tmp);
 
   return tmp;
 }
 
 Trigger* StateList::newTrigger(void){
   std::vector<Trigger*>::iterator itr;
-  std::vector<State>::iterator stateItr;
+  std::vector<State*>::iterator stateItr;
   Trigger *tmpTrigger;
 
 
@@ -54,16 +44,17 @@ Trigger* StateList::newTrigger(void){
 
   stateItr = stateList.end()-1;
 
-  stateItr->trigger_list.push_back(tmpTrigger);
+  (*stateItr)->trigger_list.push_back(tmpTrigger);
 
   return tmpTrigger;
 }
 
 
 void StateList::print(void){
-  std::vector<State>::iterator itr;
+  std::vector<State*>::iterator itr;
 
+  fprintf(stderr,"State\n");
   for(itr = stateList.begin(); itr < stateList.end(); itr++){
-    fprintf(stderr, "%s,%s\n", itr->stateName, itr->entryBlock, itr->doBlock, itr->exitBlock);
+    fprintf(stderr, "%s,%s,%s,%s\n", (*itr)->stateName, (*itr)->entryBlock, (*itr)->doBlock, (*itr)->exitBlock);
   }
 }

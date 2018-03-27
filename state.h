@@ -24,7 +24,7 @@ typedef struct _State{
 
 class StateList{
  private:
-  std::vector<State> stateList;
+  std::vector<State*> stateList;
  public:
    StateList(void);
   ~StateList(void);
