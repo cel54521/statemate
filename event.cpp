@@ -20,12 +20,14 @@ EventList::~EventList(void){
   }
 }
 
-void EventList::push(Event event){
+Event* EventList::newEvent(){
   Event *tmp = (Event*)malloc(sizeof(Event));
 
-  strcpy(tmp->eventName, event.eventName);
-  strcpy(tmp->condition, event.condition);
+  strcpy(tmp->eventName, "");
+  strcpy(tmp->condition, "");
   this->eventList.push_back(tmp);
+
+  return tmp;
 }
 
 void EventList::print(void){

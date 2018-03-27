@@ -28,7 +28,9 @@ class StateList{
  public:
    StateList(void);
   ~StateList(void);
-  void push(State state);
+
+  State* newState(void);
+  Trigger* newTrigger(void);
 
   void print(void);
 };

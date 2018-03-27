@@ -65,6 +65,9 @@ int main(void){
   state->print();
 #endif
 
+  if(parser != NULL){
+    delete parser;
+  }
   if(lexer != NULL){
     delete lexer;
   }

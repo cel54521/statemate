@@ -1,9 +1,9 @@
 
-event.cpp,181
+event.cpp,203
 EventList::EventList(void){EventList11,152
 EventList::~EventList(void){~EventList15,188
-void EventList::push(Event event){push23,348
-void EventList::print(void){print31,561
+std::vector<Event*>::iterator EventList::newEvent(){newEvent23,348
+void EventList::print(void){print33,590
 
 event.h,256
 #define _EVENT__EVENT_7,83
@@ -86,11 +86,11 @@ class Parser{Parser21,297
   Phrase phrase;phrase26,352
   int lineNo;lineNo27,370
 
-state.cpp,182
+state.cpp,208
 StateList::StateList(void){StateList11,152
 StateList::~StateList(void){~StateList15,188
-void StateList::push(State state){push30,613
-void StateList::print(void){print53,1288
+std::vector<State*>::iterator StateList::newState(void){newState30,613
+void StateList::print(void){print57,1325
 
 state.h,550
 #define _STATE__STATE_7,83

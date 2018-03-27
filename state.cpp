@@ -24,31 +24,41 @@ StateList::~StateList(void){
 
     free(&(*itrStateList));
   }
-
 }
 
-void StateList::push(State state){
-  std::vector<Trigger*>::iterator itr;
 
+State* StateList::newState(void){
   State *tmp = (State*)malloc(sizeof(State));
 
-  strcpy(tmp->stateName, state.stateName);
-  strcpy(tmp->entryBlock, state.entryBlock);
-  strcpy(tmp->doBlock, state.doBlock);
-  strcpy(tmp->exitBlock, state.exitBlock);
-
-  for(itr = state.trigger_list.begin(); itr < state.trigger_list.end(); itr++){
-    Trigger *tmpTrigger;
-    tmpTrigger = (Trigger*)malloc(sizeof(Trigger));
-
-    strcpy(tmpTrigger->triggerName, (*itr)->triggerName);
-    strcpy(tmpTrigger->nextState, (*itr)->nextState);
-
-    tmp->trigger_list.push_back(tmpTrigger);
-  }
+  // ‰Šú‰»
+  strcpy(tmp->stateName, "");
+  strcpy(tmp->entryBlock, "");
+  strcpy(tmp->doBlock, "");
+  strcpy(tmp->exitBlock, "");
 
   this->stateList.push_back(*tmp);
+
+  return tmp;
 }
+
+Trigger* StateList::newTrigger(void){
+  std::vector<Trigger*>::iterator itr;
+  std::vector<State>::iterator stateItr;
+  Trigger *tmpTrigger;
+
+
+  tmpTrigger = (Trigger*)malloc(sizeof(Trigger));
+
+  strcpy(tmpTrigger->triggerName, "");
+  strcpy(tmpTrigger->nextState, "");
+
+  stateItr = stateList.end()-1;
+
+  stateItr->trigger_list.push_back(tmpTrigger);
+
+  return tmpTrigger;
+}
+
 
 void StateList::print(void){
   std::vector<State>::iterator itr;

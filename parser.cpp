@@ -58,10 +58,8 @@ bool Parser::getPhrase(void){
 
 void Parser::analyze(EventList* const event, StateList* const state){
   char buf[10240];
-  Event eventTmp;
-  State stateTmp;
-  Trigger *triggerTmp;
-  std::vector<Trigger*>::iterator itr;
+  State* stateItr;
+  Event* eventItr;
 
   while(getPhrase() == true){
     if(this->phrase.type == TOKEN){
@@ -70,20 +68,25 @@ void Parser::analyze(EventList* const event, StateList* const state){
       getPhrase();
       if(this->phrase.type == EXPRESSION){
         // <event>
-        strcpy(eventTmp.eventName, buf);
-        strcpy(eventTmp.condition, this->phrase.buf);
+        // 新しいイベントを追加
+        eventItr = event->newEvent();
 
-        event->push(eventTmp);
+        // 追加
+        strcpy(eventItr->eventName, buf);
+        strcpy(eventItr->condition, this->phrase.buf);
+
       }else if(this->phrase.type == L_PAR){
         // <state>
+        // 新しいstateを追加
+        stateItr = state->newState();
 
         // entry
         getPhrase();
         if(this->phrase.type == ENTRY){
           getPhrase();
           if(this->phrase.type == ENTRY_DO_EXIT_BLOCK){
-            strcpy(stateTmp.stateName, buf);
-            strcpy(stateTmp.entryBlock, this->phrase.buf);
+            strcpy(stateItr->stateName, buf);
+            strcpy(stateItr->entryBlock, this->phrase.buf);
           }else{
             fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
             return;
@@ -98,8 +101,8 @@ void Parser::analyze(EventList* const event, StateList* const state){
         if(this->phrase.type == DO){
           getPhrase();
           if(this->phrase.type == ENTRY_DO_EXIT_BLOCK){
-            strcpy(stateTmp.stateName, buf);
-            strcpy(stateTmp.doBlock, this->phrase.buf);
+            strcpy(stateItr->stateName, buf);
+            strcpy(stateItr->doBlock, this->phrase.buf);
           }else{
             fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
             return;
@@ -114,8 +117,8 @@ void Parser::analyze(EventList* const event, StateList* const state){
         if(this->phrase.type == EXIT){
           getPhrase();
           if(this->phrase.type == ENTRY_DO_EXIT_BLOCK){
-            strcpy(stateTmp.stateName, buf);
-            strcpy(stateTmp.exitBlock, this->phrase.buf);
+            strcpy(stateItr->stateName, buf);
+            strcpy(stateItr->exitBlock, this->phrase.buf);
           }else{
             fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
             return;
@@ -128,15 +131,14 @@ void Parser::analyze(EventList* const event, StateList* const state){
         // trigger-list
         while(getPhrase() == true){
           if(this->phrase.type == TOKEN){
+            strcpy(buf, this->phrase.buf);
             getPhrase();
             if(this->phrase.type == ALLOW){
               getPhrase();
               if(this->phrase.type == TOKEN){
-                triggerTmp = (Trigger*)malloc(sizeof(Trigger));
-                strcpy(triggerTmp->triggerName, buf);
-                strcpy(triggerTmp->nextState, this->phrase.buf);
-
-                stateTmp.trigger_list.push_back(triggerTmp);
+                Trigger* triggerItr = state->newTrigger();
+                strcpy(triggerItr->triggerName, buf);
+                strcpy(triggerItr->nextState, this->phrase.buf);
               }else{
                 fprintf(stderr,"syntax error. Line %d\n",this->lineNo);
                 return;
@@ -156,13 +158,6 @@ void Parser::analyze(EventList* const event, StateList* const state){
 
             break;
           }
-        }
-
-        state->push(stateTmp);
-
-        // triggerTmp開放
-        for(itr = stateTmp.trigger_list.end()-1; itr >= stateTmp.trigger_list.begin(); itr--){
-          free(*itr);
         }
       }else{
         // error

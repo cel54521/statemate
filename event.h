@@ -19,8 +19,8 @@ class EventList{
  public:
   EventList(void);
   ~EventList(void);
-  void push(Event event);
 
+  Event* newEvent(void);
   void print(void);
 
 };
