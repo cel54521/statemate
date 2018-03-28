@@ -3,7 +3,7 @@
  * @brief statemate\•¶‰ğÍŠí
  * @author cel54521
  */
-#include <lexer.h>
+#include "state_lexer.h"
 #include "parser.h"
 #include <stdlib.h>
 

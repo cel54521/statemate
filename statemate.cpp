@@ -3,7 +3,7 @@
 
 #define __DEBUG__
 
-#include <lexer.h>
+#include <state_lexer.h>
 #include "parser.h"
 #include "event.h"
 #include "state.h"
