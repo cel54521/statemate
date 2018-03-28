@@ -8,20 +8,20 @@
 
 #include <vector>
 
-typedef struct _Event{
-  char eventName[10240];
-  char condition[10240];
+typedef struct _Event {
+    char eventName[10240];
+    char condition[10240];
 } Event;
 
-class EventList{
- private:
-  std::vector<Event*> eventList;
- public:
-  EventList(void);
-  ~EventList(void);
+class EventList {
+private:
+    std::vector<Event*> eventList;
+public:
+    EventList(void);
+    ~EventList(void);
 
-  Event* newEvent(void);
-  void print(void);
+    Event* newEvent(void);
+    void print(void);
 
 };
 

@@ -3,77 +3,74 @@
 
 #define __DEBUG__
 
-
-#include "lexer.h"
+#include <lexer.h>
 #include "parser.h"
 #include "event.h"
 #include "state.h"
 
+int main(void) {
+    FILE *in;
+    FILE *tmp1;
+    FILE *tmp2;
+    FILE *out;
+    StateLexer *lexer;
+    Parser *parser;
+    EventList *event;
+    StateList *state;
 
-int main(void){
-  FILE *in;
-  FILE *tmp1;
-  FILE *tmp2;
-  FILE *out;
-  Lexer *lexer;
-  Parser *parser;
-  EventList *event;
-  StateList *state;
-
-  event = new EventList();
-  state = new StateList();
-
-#ifdef __DEBUG__
-  std::vector<Event>::iterator eventItr;
-  std::vector<State>::iterator stateItr;
-#endif
-
-  if((in = fopen("states.sta","r")) == NULL){
-    fprintf(stderr,"sta file not found\n");
-  }
-
-  if((tmp1 = fopen("states.tmp","w")) == NULL){
-    fprintf(stderr,"tmp create or read error\n");
-  }
-
-  // 字句解析
-  lexer = new Lexer(in, tmp1);
-  lexer->analyze();
-
-  fclose(in);
-  fclose(tmp1);
-
-  if((tmp2 = fopen("states.tmp","r")) == NULL){
-    fprintf(stderr,"tmp create or read error\n");
-  }
-
-  if((out = fopen("states.out","w")) == NULL){
-    fprintf(stderr,"out create error\n");
-  }
-
-  // 構文解析
-  parser = new Parser(tmp2, out);
-  parser->analyze(event, state);
-
-  fclose(out);
-  fclose(tmp2);
+    event = new EventList();
+    state = new StateList();
 
 #ifdef __DEBUG__
-  fprintf(stderr,"DEBUG OUTPUT\n");
-
-  event->print();
-  state->print();
+    std::vector<Event>::iterator eventItr;
+    std::vector<State>::iterator stateItr;
 #endif
 
-  if(parser != NULL){
-    delete parser;
-  }
-  if(lexer != NULL){
-    delete lexer;
-  }
+    if ((in = fopen("states.sta", "r")) == NULL) {
+        fprintf(stderr, "sta file not found\n");
+    }
 
-  // 構文解析
+    if ((tmp1 = fopen("states.tmp", "w")) == NULL) {
+        fprintf(stderr, "tmp create or read error\n");
+    }
 
+    // 字句解析
+    lexer = new StateLexer(in, tmp1);
+    lexer->analyze();
 
-  return 0;
+    fclose(in);
+    fclose(tmp1);
+
+    if ((tmp2 = fopen("states.tmp", "r")) == NULL) {
+        fprintf(stderr, "tmp create or read error\n");
+    }
+
+    if ((out = fopen("states.out", "w")) == NULL) {
+        fprintf(stderr, "out create error\n");
+    }
+
+    // 構文解析
+    parser = new Parser(tmp2, out);
+    parser->analyze(event, state);
+
+    fclose(out);
+    fclose(tmp2);
+
+#ifdef __DEBUG__
+    fprintf(stderr, "DEBUG OUTPUT\n");
+
+    event->print();
+    state->print();
+#endif
+
+    if (parser != NULL) {
+        delete parser;
+    }
+    if (lexer != NULL) {
+        delete lexer;
+    }
+
+    // 構文解析
+
+    return 0;
 }
