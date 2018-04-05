@@ -12,7 +12,7 @@ STATE_LED_OFF
 
 STATE_LED_ON
 {
-  entry[[]]]
+  entry[]]
   do[]
   exit[]
 
